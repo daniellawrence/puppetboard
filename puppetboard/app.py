@@ -184,6 +184,14 @@ def fact(fact):
         name=fact,
         facts=yield_or_stop(puppetdb.facts(name=fact)))))
 
+@app.route('/fact/<fact>/<fact_value>')
+def fact_value(fact, fact_value):
+    """Fetches the specific fact from PuppetDB and displays its value per
+    node for which this fact is known."""
+    return Response(stream_with_context(stream_template('fact.html',
+        name=fact,
+        facts=yield_or_stop(puppetdb.facts(name=fact, value=fact_value)))))
+
 @app.route('/query', methods=('GET', 'POST'))
 def query():
     """Allows to execute raw, user created querries against PuppetDB. This is
